@@ -1,0 +1,26 @@
+// this file is Proto3
+syntax = "proto3";
+
+
+/*
+Person is used to identy users
+across our platform
+*/
+message Person {
+    int32 age = 1;
+    string first_name = 2;
+    string last_name = 3;               // check the login documentation
+    bytes small_picture = 4;            // a small .jpg file
+    bool is_profile_verified = 5;       // to know if the user is verified or not
+    float height = 6;
+
+    repeated string phone_numbers = 7;
+
+    enum EyeColor = {
+        UNUKNOW_EYE_COLOR = 0;
+        EYE_GRREN = 1;
+        EYE_BLUE = 2;
+    }
+
+    EyeColor eyeColor = 8;
+}
