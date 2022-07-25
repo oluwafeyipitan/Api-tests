@@ -1,0 +1,1438 @@
+{
+	"info": {
+		"_postman_id": "c85a6594-07a1-4961-a9f4-7ca8e11c92c1",
+		"name": "QA_practice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18526632"
+	},
+	"item": [
+		{
+			"name": "Add new user",
+			"item": [
+				{
+					"name": "Add new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.environment.set(\"userID\", data.id);\r",
+									"\r",
+									"pm.test(\"User created\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"pm.test(\"Creation successful\", function () {\r",
+									"    pm.response.to.have.status(\"Created\")\r",
+									"});\r",
+									"pm.test(\"User Id generated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\",pm.collectionVariables.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(data).to.have.property(\"name\");\r",
+									"    pm.expect(data.name).not.eql(null);\r",
+									"    pm.expect(data.name).to.eql(\"Takeshi Inui\");\r",
+									"});\r",
+									"pm.test(\"User status\", function () {\r",
+									"    pm.expect(data).to.have.property(\"status\");\r",
+									"    pm.expect(data.status).not.eql(null);\r",
+									"    pm.expect(data.status).to.eql(\"active\");\r",
+									"});\r",
+									"pm.test(\"User gender\", function () {\r",
+									"    pm.expect(data).to.have.property(\"gender\")\r",
+									"    pm.expect(data.gender).not.eql(null)\r",
+									"    pm.expect(data.gender).to.eql(\"male\")\r",
+									"});\r",
+									"pm.test(\"ID should be a number\", function () {\r",
+									"    pm.expect(data.id).not.eql(null);\r",
+									"    pm.expect(data.id).to.be.a(\"number\");\r",
+									"    pm.expect(data.id).be.above(0);\r",
+									"});\r",
+									"pm.test(\"Name should be a string\", function () {\r",
+									"    pm.expect(data.name).to.be.a(\"string\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Takeshi Inui\",\r\n    \"gender\":\"male\", \r\n    \"email\":\"takeshi.in@15ce.com\", \r\n    \"status\":\"active\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data=pm.response.json()\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(data[0]).to.have.property(\"name\");\r",
+									"    pm.expect(data[0].name).not.eql(null);\r",
+									"    pm.expect(data[0].name).to.eql(\"Takeshi Inui\");\r",
+									"});\r",
+									"pm.test(\"ID should be a number and eql to the assigned number\", function () {\r",
+									"    pm.expect(data[0].id).not.eql(null);\r",
+									"    pm.expect(data[0].id).to.be.a(\"number\");\r",
+									"    pm.expect(data[0].id).be.above(0);\r",
+									"    pm.expect(data[0].id).to.be.eql(pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"User gender\", function () {\r",
+									"    pm.expect(data[0]).to.have.property(\"gender\")\r",
+									"    pm.expect(data[0].gender).not.eql(null)\r",
+									"    pm.expect(data[0].gender).to.eql(\"male\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users?name=Takeshi",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Takeshi"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('is an Array', () => {\r",
+									"    pm.expect(pm.response.json()).to.be.an('array').but.not.an('object')\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Takeshi Inui\")\r",
+									"});\r",
+									"pm.test(\"ID should be equal to the assigned number\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Email should be included\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"takeshi.in@15ce.com\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new user without name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User creation unsuccessful\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"gender\":\"male\", \r\n    \"email\":\"tin@15ce.com\", \r\n    \"status\":\"active\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new user without email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User creation unsuccessful\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Danny drink\",\r\n    \"gender\":\"male\",  \r\n    \"status\":\"active\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new user without authorization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User creation unsuccessful\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Danny drink\",\r\n    \"gender\":\"male\", \r\n    \"email\":\"d.ings@fm.25.com\", \r\n    \"status\":\"active\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new user without status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User creation unsuccessful\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Danny drink\",\r\n    \"gender\":\"male\", \r\n    \"email\":\"d.ings@fm.25.com\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new user with wrong variable types",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User creation unsuccessful\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"1234673\",\r\n    \"gender\":9, \r\n    \"email\":\"d.ings@fm.25.com\",\r\n    \"status\":\"1\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{bearerToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Update user",
+			"item": [
+				{
+					"name": "Update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Update successful\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"pm.test(\"User Id generated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\", pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(data).to.have.property(\"name\");\r",
+									"    pm.expect(data.name).not.eql(null);\r",
+									"    pm.expect(data.name).to.eql(\"Alan Pardew\");\r",
+									"});\r",
+									"pm.test(\"User status\", function () {\r",
+									"    pm.expect(data).to.have.property(\"status\");\r",
+									"    pm.expect(data.status).not.eql(null);\r",
+									"    pm.expect(data.status).to.eql(\"inactive\");\r",
+									"});\r",
+									"pm.test(\"User gender\", function () {\r",
+									"    pm.expect(data).to.have.property(\"gender\")\r",
+									"    pm.expect(data.gender).not.eql(null)\r",
+									"    pm.expect(data.gender).to.eql(\"male\")\r",
+									"});\r",
+									"pm.test(\"ID should be a number\", function () {\r",
+									"    pm.expect(data.id).not.eql(null);\r",
+									"    pm.expect(data.id).to.be.a(\"number\");\r",
+									"    pm.expect(data.id).be.above(0);\r",
+									"});\r",
+									"pm.test(\"Name should be a string\", function () {\r",
+									"    pm.expect(data.name).to.be.a(\"string\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Alan Pardew\",\r\n    \"email\":\"ala.pard@15ce.com\",\r\n    \"status\":\"inactive\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/{{userID}}",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{userID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user after updating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Update successful\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"pm.test(\"User Id generated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\", pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(data[0]).to.have.property(\"name\");\r",
+									"    pm.expect(data[0].name).not.eql(null);\r",
+									"    pm.expect(data[0].name).to.eql(\"Alan Pardew\");\r",
+									"});\r",
+									"pm.test(\"User status\", function () {\r",
+									"    pm.expect(data[0]).to.have.property(\"status\");\r",
+									"    pm.expect(data[0].status).not.eql(null);\r",
+									"    pm.expect(data[0].status).to.eql(\"inactive\");\r",
+									"});\r",
+									"pm.test(\"User gender\", function () {\r",
+									"    pm.expect(data[0]).to.have.property(\"gender\")\r",
+									"    pm.expect(data[0].gender).not.eql(null)\r",
+									"    pm.expect(data[0].gender).to.eql(\"male\")\r",
+									"});\r",
+									"pm.test(\"ID should be a number\", function () {\r",
+									"    pm.expect(data[0].id).not.eql(null);\r",
+									"    pm.expect(data[0].id).to.be.a(\"number\");\r",
+									"    pm.expect(data[0].id).be.above(0);\r",
+									"});\r",
+									"pm.test(\"Email should be valid\", function () {\r",
+									"    pm.expect(data[0].email).not.eql(null);\r",
+									"    pm.expect(data[0].email).to.be.a(\"string\");\r",
+									"    pm.expect(data[0].email).be.eql(\"ala.pard@15ce.com\");\r",
+									"});\r",
+									"pm.test(\"Name should be a string\", function () {\r",
+									"    pm.expect(data[0].name).to.be.a(\"string\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users?name=Alan",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Alan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('is an Array', () => {\r",
+									"    pm.expect(pm.response.json()).to.be.an('array').but.not.an('object')\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Alan Pardew\")\r",
+									"});\r",
+									"pm.test(\"ID should be equal to the assigned number\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"userID\"))\r",
+									"});\r",
+									"pm.test(\"Email should be included\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"ala.pard@15ce.com\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user without authorization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Unsucessful update\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([401,404]);\r",
+									"});\r",
+									"//pm.test(\"No authorization\", function () {\r",
+									"//    pm.response.to.have.status(\"Unauthorized\");\r",
+									"//});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Alan Pardew\",\r\n    \"email\":\"ala.pard@15ce.com\",\r\n    \"status\":\"inactive\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/5593",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"5593"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user without ID in params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Unsucessful update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"No authorization\", function () {\r",
+									"    pm.response.to.have.status(\"Not Found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Alan Pardew\",\r\n    \"email\":\"ala.pard@15ce.com\",\r\n    \"status\":\"inactive\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user with wrong ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Unsucessful update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"No authorization\", function () {\r",
+									"    pm.response.to.have.status(\"Not Found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Alan Pardew\",\r\n    \"email\":\"ala.pard@15ce.com\",\r\n    \"status\":\"inactive\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/1000000000000000000",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"1000000000000000000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete user",
+			"item": [
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Delete successful\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"pm.test(\"Token limit is present\", function () {\r",
+									"    pm.response.to.have.header(\"X-RateLimit-Limit\");\r",
+									"});\r",
+									"pm.test(\"Deleted\", function () {\r",
+									"    pm.response.to.have.status(\"No Content\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/{{userID}}",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{userID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user after deleting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('is an Array', () => {\r",
+									"    pm.expect(pm.response.json()).to.be.an('array').but.not.an('object')\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(\"Alan Pardew\")\r",
+									"});\r",
+									"pm.test(\"ID should be equal to the assigned number\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(pm.environment.get(\"userID\"))\r",
+									"});\r",
+									"pm.test(\"Email should be included\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(\"ala.pard@15ce.com\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users?name=Alan",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Alan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get users after deleting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('is an Array', () => {\r",
+									"    pm.expect(pm.response.json()).to.be.an('array').but.not.an('object')\r",
+									"});\r",
+									"pm.test(\"Name displayed\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(\"Alan Pardew\")\r",
+									"});\r",
+									"pm.test(\"ID should be equal to the assigned number\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(pm.environment.get(\"userID\"))\r",
+									"});\r",
+									"pm.test(\"Email should be included\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(\"ala.pard@15ce.com\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user without authorization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Unsucessful update\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([401,404]);\r",
+									"});\r",
+									"//pm.test(\"No authorization\", function () {\r",
+									"//    pm.response.to.have.status(\"Unauthorized\");\r",
+									"//});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/5593",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"5593"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user with wrong ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Unsucessful update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"No authorization\", function () {\r",
+									"    pm.response.to.have.status(\"Not Found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/10000000000000000000000",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"10000000000000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user without ID in params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Unsucessful update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"No authorization\", function () {\r",
+									"    pm.response.to.have.status(\"Not Found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ACCESS-TOKEN"
+							}
+						],
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "userID",
+			"value": ""
+		}
+	]
+}
